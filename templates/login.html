@@ -1,0 +1,44 @@
+{% load staticfiles %}
+{% load bootstrap %}
+
+<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+
+<link href='http://fonts.googleapis.com/css?family=Sanchez' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Karla' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+<div id="outer">
+
+    <div id="border">
+<div id="login">
+<h4>Hello.</h4>
+
+<div id="state">{{ state }}</div>
+
+{% if next %}
+<form action="/login/?next={{next}}" method="post">
+
+{% else %}
+<form action="/login/" method="post">
+
+{% endif %}
+
+{% csrf_token %}
+
+
+
+
+        {{ form|bootstrap }}
+
+
+
+<input type="submit" value = "Log in" id="login_button">
+<div id="links">
+<a href="../register">Forgot password?</a> <br>
+<a href="../register">Sign me up!</a>
+
+</div>
+</div>
+
+</div>
+</div>

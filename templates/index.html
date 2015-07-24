@@ -1,0 +1,106 @@
+{% load staticfiles %}
+{% load bootstrap %}
+{{ form.media.css }}
+
+<!DOCTYPE HTML>
+
+<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<link href="{% static 'chosen.css' %}" rel="stylesheet">
+<script type="text/javascript" src="{% static 'chosen.jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'chosen.jquery_ready.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<link href='http://fonts.googleapis.com/css?family=Sanchez' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Karla' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+
+<script>
+$(document).ready(function () {
+    $('.likes').click(function () {
+        console.log("here");
+        var postid;
+        postid = $(this).attr("data-postid");
+        console.log("Postid: " + postid);
+        $.get('/like/', {post_id: postid}, function(data) {
+            console.log("#like_count" + postid);
+            $('#likeCount' + postid).html(data);
+            $('#likeButton' +postid).hide();
+        });
+    });
+
+});
+</script>
+
+
+    {% block content %}
+    <div id="logout_button"><a href="/logout">Logout</a></div>
+    <h1>Hello, {{ username }} </h1>
+
+        
+        <div id="pageContent">
+        <h2>Categories</h2>
+        <div id="categories">
+        {% if categories %}
+            <ul>
+            {% for category in categories %}
+                <li><i class="fa fa-tag"></i><a href="{{ category.get_absolute_url }}">  {{ category.title }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>There are no posts.</p>
+        {% endif %}
+        </div>
+
+        <h2>Posts</h2>
+        <div id="posts">
+        {% if posts %}
+            <ul>
+            {% for post in posts %}
+                <li><div class="title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a> by {{post.author}}</div> 
+                    <p>{{ post.body }}</p>
+
+                    <div class="postCats"> 
+                        {% for category in post.category.all %}
+                        <i class="fa fa-tag"></i><a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+                        {% endfor %}
+                    </div>
+
+
+
+                    <p>
+
+                        <strong id="likeCount{{post.pk}}">{{ post.likes }}</strong> people like this post
+
+
+                                <button class="likes" id="likeButton{{post.pk}}" data-postid="{{post.pk}}"  type="button">
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                Like
+                                </button>
+         
+
+                        </p>
+                <hr>
+                </li>
+
+            {% endfor %}
+            </ul>
+            
+        {% else %}
+            <p>There are no posts.</p>
+        {% endif %}
+        </div>
+        <div id="create_post_form">
+            <form method="post" action="">
+                  {{ form | bootstrap }}
+                  {% csrf_token %}
+              <input type="submit" value="create post" id="post_button"/>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+
+

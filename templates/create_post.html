@@ -1,0 +1,9 @@
+{% load staticfiles %}
+{% load bootstrap %}
+
+
+<form method="post" action=".">
+  {{ form|bootstrap }}
+{% csrf_token %}
+  <input type="submit" value="create post" id="login_button"/>
+</form>
